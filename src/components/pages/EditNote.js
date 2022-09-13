@@ -30,7 +30,7 @@ const EditNote = () => {
 
     console.log(task);
 
-    const api = `http://localhost:5000/edit/${_id}`;
+    const api = `https://note-keeper-be-zen.onrender.com/edit/${_id}`;
     fetch(api, {
       method: "PUT",
       headers: {

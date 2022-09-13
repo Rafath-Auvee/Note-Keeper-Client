@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 const Home = () => {
-  const baseURL = "http://localhost:5000/all";
+  const baseURL = "https://note-keeper-be-zen.onrender.com/all";
   const [todos, setTodo] = useState([]);
   const navigate = useNavigate();
   const notify = () => toast("Here is your toast.");
@@ -23,7 +23,7 @@ const Home = () => {
   const confirmDelete = async (id) => {
     const agree = window.confirm("Confirm?");
     if (agree) {
-      const url = `http://localhost:5000/all/${id}`;
+      const url = `https://note-keeper-be-zen.onrender.com/all/${id}`;
       console.log(id);
       fetch(url, {
         method: "DELETE",
@@ -39,7 +39,7 @@ const Home = () => {
 
   const handleComplete = (id) => {
     const agree = window.confirm("Complete?");
-    const url = `http://localhost:5000/all/${id}`;
+    const url = `https://note-keeper-be-zen.onrender.com/all/${id}`;
     fetch(`${url}`, {
       method: "PUT",
       headers: {
@@ -51,7 +51,7 @@ const Home = () => {
 
   const handleError = (id) => {
     const agree = window.confirm("Not Complete?");
-    const url = `http://localhost:5000/all/${id}`;
+    const url = `https://note-keeper-be-zen.onrender.com/all/${id}`;
     fetch(`${url}`, {
       method: "PATCH",
       headers: {

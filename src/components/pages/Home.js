@@ -18,7 +18,7 @@ const Home = ({ refetch }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(6);
 
-  const baseURL = "http://localhost:5000/all";
+  const baseURL = "https://note-keeper-be-zen.onrender.com/all";
   const [todos, setTodo] = useState([]);
   const navigate = useNavigate();
   const notify = () => toast("Here is your toast.");
@@ -112,7 +112,7 @@ const Home = ({ refetch }) => {
 
   const handleError = (id) => {
     const agree = window.confirm("Not Complete?");
-    const url = `http://localhost:5000/all/${id}`;
+    const url = `https://note-keeper-be-zen.onrender.com/all/${id}`;
     fetch(`${url}`, {
       method: "PATCH",
       headers: {

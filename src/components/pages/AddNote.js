@@ -33,7 +33,7 @@ const AddNote = () => {
     // console.log(task)
     console.log(task);
 
-    const api = `http://localhost:5000/all`;
+    const api = `https://note-keeper-be-zen.onrender.com/all`;
     fetch(api, {
       method: "POST",
       headers: {

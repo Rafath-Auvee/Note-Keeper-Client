@@ -11,12 +11,12 @@ const DeleteModal = ({
 }) => {
   const { _id, Task, Description, tagline } = deletingProduct;
 
-  const baseURL = "http://localhost:5000/all";
+  const baseURL = "https://note-keeper-be-zen.onrender.com/all";
   
 
   const confirmDelete = async () => {
     console.log("first");
-    const url = `http://localhost:5000/all/${_id}`;
+    const url = `https://note-keeper-be-zen.onrender.com/all/${_id}`;
     console.log(_id);
     fetch(url, {
       method: "DELETE",
