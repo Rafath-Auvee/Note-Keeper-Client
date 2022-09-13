@@ -3,8 +3,17 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import Pagination from "./Pagination";
 import DeleteModal from "./DeleteModal";
+import axios from "axios";
 
-const Home = () => {
+import {
+  useQuery,
+  useQueryClient,
+  useMutation,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
+const Home = ({ refetch }) => {
   const [deletingProduct, setDeletingProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(6);
@@ -26,6 +35,7 @@ const Home = () => {
       .then((data) => {
         // console.log(deletingNote)
         setTodo(data);
+        
       });
   }, []);
 
@@ -50,9 +60,9 @@ const Home = () => {
   };
 
   const deleteNote = async (todo) => {
-    console.log(todo)
-    setDeletingProduct(todo)
-  }
+    console.log(todo);
+    setDeletingProduct(todo);
+  };
 
   const sampleMap = (
     <>
@@ -75,7 +85,7 @@ const Home = () => {
                 Pinned
               </button>
               <button
-                onClick={() => navigateNote(todo._id)}
+                onClick={() => navigateNote(todo)}
                 className="btn btn-outline bg-blue-500 text-white btn-xs"
               >
                 Read More
@@ -88,7 +98,7 @@ const Home = () => {
               </button>
               <label
                 className="btn btn-outline bg-red-500 text-white btn-xs"
-                htmlFor="my-modal-6" 
+                htmlFor="my-modal-6"
                 onClick={() => deleteNote(todo)}
               >
                 Delete
@@ -120,6 +130,8 @@ const Home = () => {
       {deletingProduct && (
         <DeleteModal
           deletingProduct={deletingProduct}
+          setTodo={setTodo}
+          todos={todos}
           setDeletingProduct={setDeletingProduct}
         ></DeleteModal>
       )}
@@ -129,6 +141,7 @@ const Home = () => {
           postsPerPage={postsPerPage}
           setCurrentPage={setCurrentPage}
           currentPage={currentPage}
+          
         />
       </div>
     </div>

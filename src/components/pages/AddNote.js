@@ -21,11 +21,13 @@ const AddNote = () => {
     const Task = e.TaskName;
     const Description = e.TaskDescription;
     const tagline = e.tagline;
+    const time = new Date().toLocaleString();
       
     const task = {
       Task,
       Description,
       tagline,
+      time
     };
     
     // console.log(task)

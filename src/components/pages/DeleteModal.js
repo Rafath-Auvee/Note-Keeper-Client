@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
-const DeleteModal = ({ deletingProduct, setDeletingProduct }) => {
+const DeleteModal = ({
+  deletingProduct,
+  refetch,
+  setDeletingProduct,
+  todos,
+  setTodo
+
+}) => {
   const { _id, Task, Description, tagline } = deletingProduct;
 
   const baseURL = "http://localhost:5000/all";
-  const [todos, setTodo] = useState([]);
+  
 
   const confirmDelete = async () => {
     console.log("first");
@@ -16,11 +23,15 @@ const DeleteModal = ({ deletingProduct, setDeletingProduct }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        const remaining = todos.filter((note) => note._id !== _id);
-        toast.success(`Note Delete`);
-        setDeletingProduct(null);
-        setTodo(remaining);
+        if (data.deletedCount) {
+          toast.success(`${Task} is removed`, {
+            duration: 4000,
+            position: "top-right",
+          });
+          const fillteredTodo = todos.filter((note)=> note._id !== _id);
+          setDeletingProduct(null);
+          setTodo(fillteredTodo)
+        }
       });
   };
 
@@ -42,8 +53,8 @@ const DeleteModal = ({ deletingProduct, setDeletingProduct }) => {
             <button onClick={() => confirmDelete()} className="btn btn-error">
               Yes
             </button>
-            <label htmlFor="delete-order-modal" className="btn">
-              Cancel
+            <label htmlFor="my-modal-6" className="btn">
+              No
             </label>
           </div>
         </div>
