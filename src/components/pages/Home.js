@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import Pagination from "./Pagination";
+import DeleteModal from "./DeleteModal";
 
 const Home = () => {
-  const [oinned, setPinned] = useState([]);
+  const [deletingProduct, setDeletingProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(6);
 
@@ -23,63 +24,35 @@ const Home = () => {
     fetch(`${baseURL}`)
       .then((res) => res.json())
       .then((data) => {
+        // console.log(deletingNote)
         setTodo(data);
       });
   }, []);
-  // useEffect( () => {
-
-  // }, []);
-  
 
   const editTodo = async (todo) => {
     console.log(todo);
     await navigate(`/edit/${todo._id}`, { state: todo });
   };
+
   const navigateNote = async (todo) => {
     await navigate(`/note/${todo._id}`, { state: todo });
   };
-  const handlePinned = async (todo, array, from, to) => {
-    
-    console.log("array");
-    console.log(array);
-    let newCart = [];
-    // const exists = todos.find(note => note._id === todo._id);
-    const exists = array.splice(to, 0, array.splice(from, 1)[0]);
-    // const rest = todos.filter(note => note._id !== todo._id);
-    console.log()
 
-    setTodo(array);
-
+  const handlePinned = async (todo, index) => {
+    let newUsers = [...todos];
+    const rest = todos.filter((note) => note._id !== todo._id);
+    toast.success(`"${todo.Task}" now is pinned`, {
+      duration: 4000,
+      position: "top-right",
+    });
+    newUsers = [todo, ...rest];
+    setTodo(newUsers);
   };
 
-  const confirmDelete = async (id) => {
-    const agree = window.confirm("Confirm?");
-    if (agree) {
-      const url = `http://localhost:5000/all/${id}`;
-      console.log(id);
-      fetch(url, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          const remaining = todos.filter((todo) => todo._id !== id);
-          setTodo(remaining);
-        });
-    }
-  };
-
-  const handleComplete = (id) => {
-    const agree = window.confirm("Complete?");
-    const url = `http://localhost:5000/all/${id}`;
-    fetch(`${url}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(),
-    }).then((res) => res.json().then((data) => {}));
-  };
+  const deleteNote = async (todo) => {
+    console.log(todo)
+    setDeletingProduct(todo)
+  }
 
   const sampleMap = (
     <>
@@ -96,7 +69,7 @@ const Home = () => {
             <p>{todo.tagline}</p>
             <div className="card-actions justify-end">
               <button
-                onClick={() => handlePinned(todo, arr, index, 0)}
+                onClick={() => handlePinned(todo, index, 0)}
                 className="btn btn-outline bg-green-500 text-white btn-xs"
               >
                 Pinned
@@ -113,12 +86,13 @@ const Home = () => {
               >
                 Edit
               </button>
-              <button
+              <label
                 className="btn btn-outline bg-red-500 text-white btn-xs"
-                onClick={() => confirmDelete(todo._id)}
+                htmlFor="my-modal-6" 
+                onClick={() => deleteNote(todo)}
               >
                 Delete
-              </button>
+              </label>
             </div>
           </div>
         </div>
@@ -143,6 +117,12 @@ const Home = () => {
       <div className="grid justify-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[50px]">
         {sampleMap}
       </div>
+      {deletingProduct && (
+        <DeleteModal
+          deletingProduct={deletingProduct}
+          setDeletingProduct={setDeletingProduct}
+        ></DeleteModal>
+      )}
       <div className="grid justify-items-center mt-[100px]">
         <Pagination
           totalPosts={todos.length}

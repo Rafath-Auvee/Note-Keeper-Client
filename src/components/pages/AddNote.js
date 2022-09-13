@@ -1,28 +1,36 @@
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
 
 const AddNote = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  let message = (
+    <>
+      <p className="text-red font-bold"></p>
+    </>
+  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-  const handleTodo = async (e) => {
-    e.preventDefault();
-    const Task = e.target.TaskName.value;
-    const Description = e.target.TaskDescription.value;
-    const tagline = e.target.tagline.value;
-    const Complete = false;
-
+  const onSubmit = async (e) => {
+    // e.preventDefault();
+    const Task = e.TaskName;
+    const Description = e.TaskDescription;
+    const tagline = e.tagline;
+      
     const task = {
       Task,
       Description,
       tagline,
-      Complete,
     };
-
+    
+    // console.log(task)
     console.log(task);
-    if (task) {
-      // console.log("All inputs are working");
-    } else {
-      // console.log("All inputs are empty");
-    }
+
     const api = `http://localhost:5000/all`;
     fetch(api, {
       method: "POST",
@@ -33,47 +41,62 @@ const AddNote = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log("Working and the Data", data);
-        e.target.reset();
+        console.log("Working and the Data", data);
+        toast.success(`Note Added Successfully`, {
+          duration: 4000,
+          position: "top-right",
+        });
+        reset();
+      })
+      .catch((error) => {
+        toast.error(`${error} - Something Went Wrong`, {
+          duration: 4000,
+          position: "top-right",
+        });
       });
   };
 
   return (
     <div className={`max-w-screen-md mx-auto p-5 mt-5 pt-6 h-screen`}>
       <div className="text-center mb-16">
-        {/* <p className="mt-4 text-3xl md:text-5xl lg:text-7xl text-center leading-7 text-indigo-500 font-regular ">
-          AddNote
-        </p> */}
         <h3 className="text-3xl sm:text-4xl leading-normal font-extrabold tracking-tight text-gray-900">
-          Add <span className="text-indigo-600">Todo</span>
+          Add <span className="text-indigo-600">Note</span>
         </h3>
       </div>
 
-      <form onSubmit={handleTodo} className={`w-full `}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide  text-xs font-bold mb-2"
-              for="grid-first-name"
+              htmlFor="grid-first-name"
             >
               Task Name
             </label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-black border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="appearance-none block w-full bg-gray-200 text-black border border-red-500 rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white"
               id="grid-first-name"
               type="text"
               name="TaskName"
               placeholder="Rafath"
-              required
+              {...register("TaskName", {
+                required: {
+                  value: true,
+                  message: "TaskName is Required",
+                },
+              })}
             />
-            {/* <p className="text-red-500 text-xs italic">
-              Please fill out this field.
-            </p> */}
+            
+            {errors.TaskName && errors.TaskName.type === "required" && (
+              <p className="text-xl font-bold" style={{ color: "red" }}>
+                Task Name Required.
+              </p>
+            )}
           </div>
           <div className="w-full md:w-1/2 px-3">
             <label
               className="block uppercase tracking-wide  text-xs font-bold mb-2"
-              for="grid-last-name"
+              htmlFor="grid-last-name"
             >
               Tagline
             </label>
@@ -82,17 +105,27 @@ const AddNote = () => {
               id="grid-last-name"
               type="text"
               name="tagline"
-              required
               placeholder="tagline"
+              {...register("tagline", {
+                required: {
+                  value: true,
+                  message: "Tagline is Required",
+                },
+              })}
             />
+            {/* <ErrorMessage errors={errors} name="tagline" as="p" /> */}
+            {errors.tagline && errors.tagline.type === "required" && (
+              <p className="text-xl font-bold" style={{ color: "red" }}>
+                Task Tagline Required.
+              </p>
+            )}
           </div>
         </div>
-
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full px-3">
             <label
               className="block uppercase tracking-wide  text-xs font-bold mb-2"
-              for="grid-password"
+              htmlFor="grid-password"
             >
               Task Description
             </label>
@@ -101,8 +134,20 @@ const AddNote = () => {
               name="TaskDescription"
               className="appearance-none block w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               placeholder="You are hired!"
-              required
+              {...register("TaskDescription", {
+                required: {
+                  value: true,
+                  message: "TaskDescription is Required",
+                },
+              })}
             ></textarea>
+            {errors.TaskDescription &&
+              errors.TaskDescription.type === "required" && (
+                <p className="text-xl font-bold mb-2" style={{ color: "red" }}>
+                  Task Description Required.
+                </p>
+              )}
+            {/* <ErrorMessage errors={errors} name="TaskDescription" as="p" /> */}
           </div>
           <div className="flex justify-between w-full px-3">
             <button

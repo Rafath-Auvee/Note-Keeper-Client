@@ -1,5 +1,6 @@
 
 import "./App.css";
+import toast, { Toaster } from 'react-hot-toast';
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/shared/Navbar";
 import AddNote from "./components/pages/AddNote";
@@ -19,6 +20,7 @@ function App() {
         <Route path="/edit/:id" element={<EditNote />} />
         <Route path="/draft" element={<Test />} />
       </Routes>
+      <Toaster />
     </div>
   );
 }
